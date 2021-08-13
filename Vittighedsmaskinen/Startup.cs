@@ -25,7 +25,8 @@ namespace Vittighedsmaskinen
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            services.AddDistributedMemoryCache();
+            services.AddSession();
             services.AddControllers();
         }
 
@@ -40,6 +41,8 @@ namespace Vittighedsmaskinen
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseSession();
 
             app.UseAuthorization();
 

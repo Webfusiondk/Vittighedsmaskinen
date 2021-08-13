@@ -8,55 +8,82 @@ namespace Vittighedsmaskinen
     public class JokeManager
     {
         Random r = new Random();
-        List<Jokes> ListOfJokes = new List<Jokes>()
+        JokeStorage jokeStorage = new JokeStorage();
+        public Joke GiveRandomJoke(List<Joke> UsedJokes, string language)
         {
-            new Jokes("Ved du hvorfor dværge altid griner når de spiller fodbold... Svar: Fordi græsset kilder dem i numsen.",Language.Danish,Category.Dwarf),
-            new Jokes("Og så var der den om kanibalen der var på slankekur: ...han måtte kun spise dværge",Language.Danish,Category.Dwarf),
-            new Jokes("Where do midgets like to go surfing? On microwaves.",Language.English,Category.Dwarf),
-            new Jokes("Konen lå og hyggede sig med en dværg, da manden kom hjem: Skulle du ikke stoppe med,at være utro?, brølede han.Konen: Kan du ikke se, jeg er ved, at trappe ned?",Language.Danish,Category.Dwarf),
-            new Jokes("I met a midget once, my conversation with her was extremely awkward. I am not very good when it comes to small talk.",Language.English,Category.Dwarf),
-            new Jokes("What do you call a fish wearing a bowtie? Sofishticated.",Language.English,Category.Dad),
-            new Jokes("How do you get a squirrel to like you? Act like a nut.",Language.English,Category.Dad),
-            new Jokes("Hvad er den bedste måde at huske sin kones fødelsdag på? Svar: ved at prøve at glemme den en gang",Language.Danish,Category.Dad),
-            new Jokes("Søn: Far, jeg er sulten Far: Hej Sulten godt at møde dig. Jeg er far Søn: Far, jeg er seriøs... Far: Jeg troede du var sulten? :o) Søn: ER DU SERIØS? Far: Nej, jeg er far",Language.Danish,Category.Dad),
-            new Jokes("Hvilket dyr elsker at samle efter flasker? – Panteren",Language.Danish,Category.Dad),
-            new Jokes("0 is false and 1 is true, Right? Svar: 1",Language.English,Category.Tech),
-            new Jokes("why do java programmers wear glasses Svar: because they don't c#",Language.English,Category.Tech),
-            new Jokes("At sige er Java er godt, fordi det virker på alle platforme, er som at sige, at analsex er godt, fordi det virker med alle køn. (Bonus: Det lugter lidt af lort. Det er fint nok, hvis man bare vil hygge sig - men det er ikke produktivt.)",Language.Danish,Category.Tech),
-            new Jokes("Hvad er forskellen på en Linux bruger og en rotte? Rotten formerer sig.",Language.Danish,Category.Tech),
-            new Jokes("- Hvad gør Bill Gates, når bilen går i stykker ? Han lukker alle vinduer, og prøver at starte igen !",Language.Danish,Category.Tech)
-        };
+            //Try and catch for when we run out of jokes.
+            FilterListForUsedJokes(UsedJokes);
+            Language defaultLanguage = ChoseLanguage(language);
+            //Give a random joke from  the list.
+            int index = r.Next(jokeStorage.ListOfJokes.Where(joke => joke.Language == defaultLanguage).Count());
+            Joke temp = jokeStorage.ListOfJokes[index];
+            return temp;
 
-        public string GiveRandomJoke()
-        {
-            int index = r.Next(ListOfJokes.Count);
-            return ListOfJokes[index].Joke;
         }
-
-        public string GetJokeFromCategory(string category)
+        public Joke GetJokeFromCategory(string category, List<Joke> UsedJokes, string language)
         {
-            List<Jokes> Temp = new List<Jokes>();
-            foreach (var item in ListOfJokes)
+
+            //loop threw the list from the highest to lowest. So we dont miss any jokes.
+            Language defaultLanguage = ChoseLanguage(language);
+            Category chosenCategory = ValidateCategoryInput(category);
+            FilterListForUsedJokes(UsedJokes);
+            for (int i = jokeStorage.ListOfJokes.Count - 1; i >= 0; i--)
             {
-                if (item.Category.ToString().ToLower() == category.ToLower())
+                //Checks if the joke are not Category we are looking for
+                if (jokeStorage.ListOfJokes[i].Category != chosenCategory)
                 {
-                    Temp.Add(item);
+                    //Checks if the joke are not the Language we are looking for
+                    if (jokeStorage.ListOfJokes[i].Language != defaultLanguage)
+                    {
+                        jokeStorage.ListOfJokes.RemoveAt(i);
+                    }
                 }
             }
-            int index = r.Next(Temp.Count);
-            return Temp[index].Joke;
+            return jokeStorage.ListOfJokes[r.Next(jokeStorage.ListOfJokes.Count)];
         }
 
-        public void ChoseLanguage()
+        public string Categorys()
         {
-
-        }
-        public string GetCategorys()
-        {
-            string temp;
-            foreach (var item in ListOfJokes)
+            //returns a combind string of the categorys.
+            string temp = "";
+            foreach (Category category in Enum.GetValues(typeof(Category)))
             {
+                temp += category + "\n";
+            }
+            return temp;
+        }
 
+        private Category ValidateCategoryInput(string categoryType)
+        {
+            //Validates the category we are looking for
+            Category category;
+            category = (Category)Enum.Parse(typeof(Category), categoryType.First().ToString().ToUpper() + categoryType.Substring(1));
+            return category;
+        }
+        private Language ChoseLanguage(string language)
+        {
+            switch (language)
+            {
+                case "da":
+                    return Language.Danish;
+                case"en" :
+                    return Language.English;
+            }
+            //if no language match found Danish is default.
+            return Language.Danish;
+        }
+        private void FilterListForUsedJokes(List<Joke> UsedJokes)
+        {
+            //Goes through the listofjokes to find used jokes and remove them.
+            for (int i = 0; i < UsedJokes.Count; i++)
+            {
+                for (int j = 0; j < jokeStorage.ListOfJokes.Count; j++)
+                {
+                    if (UsedJokes[i].Id == jokeStorage.ListOfJokes[j].Id)
+                    {
+                        jokeStorage.ListOfJokes.RemoveAt(j);
+                    }
+                }
             }
         }
     }

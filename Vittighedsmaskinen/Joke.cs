@@ -16,16 +16,18 @@ namespace Vittighedsmaskinen
         Dwarf,
         Tech
     }
-    public class Jokes
+    public class Joke
     {
-        public Jokes(string joke, Language language, Category category)
+        public Joke(string jokes, Language language, Category category, int id)
         {
-            Joke = joke;
+            Jokes = jokes;
             Language = language;
             Category = category;
+            Id = id;
         }
 
-        public string Joke { get; set; }
+        public int Id { get; set; }
+        public string Jokes { get; set; }
         public Language Language { get; set; }
         public Category Category { get; set; }
     }
