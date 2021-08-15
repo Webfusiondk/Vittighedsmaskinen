@@ -20,6 +20,12 @@ namespace Vittighedsmaskinen
             return temp;
 
         }
+        public Joke GiveSecretJoke()
+        {
+            int index = r.Next(jokeStorage.SecretListOfJokes.Count);
+            Joke temp = jokeStorage.SecretListOfJokes[index];
+            return temp;
+        }
         public Joke GetJokeFromCategory(string category, List<Joke> UsedJokes, string language)
         {
 

@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 
 namespace Vittighedsmaskinen.Controllers
 {
-
     [ApiController]
     [Route("[controller]")]
     public class JokeController : Controller
@@ -28,18 +27,25 @@ namespace Vittighedsmaskinen.Controllers
                 }
 
                 GetUsedJokesList();
-                //Gets a random joke and addes it to the seesion. And returns the joke to the front end
+                //Gets a random joke and addes it to the session. And returns the joke to the front end
                 Joke Temp = JokeManager.GiveRandomJoke(UsedJokes, CheckForDefaultLanguage());
                 UsedJokes.Add(Temp);
                 HttpContext.Session.SetObjectAsJson("UsedJokes", UsedJokes);
                 return Ok(Temp);
             }
-            catch (IndexOutOfRangeException)
+            catch (ArgumentOutOfRangeException)
             {
                 return BadRequest("Out of jokes.");
             }
         }
-
+        [ApiKeyAuth]
+        [HttpGet]
+        [Route("Secret")]
+        public IActionResult GetSecretJoke()
+        {
+            Joke Temp = JokeManager.GiveSecretJoke();
+            return Ok(Temp);
+        }
         public IActionResult GetJokeByCategory(string category)
         {
             try
@@ -105,7 +111,7 @@ namespace Vittighedsmaskinen.Controllers
                 }
             }
             return "";
-        } 
+        }
         private void SetUserFavoriteCategory(Category category)
         {
             //sets last category used

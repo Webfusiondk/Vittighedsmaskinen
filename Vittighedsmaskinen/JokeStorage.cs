@@ -25,5 +25,14 @@ namespace Vittighedsmaskinen
             new Joke("Hvad er forskellen på en Linux bruger og en rotte? Rotten formerer sig.",Language.Danish,Category.Tech,14),
             new Joke("- Hvad gør Bill Gates, når bilen går i stykker ? Han lukker alle vinduer, og prøver at starte igen !",Language.Danish,Category.Tech,15)
         };
+
+        public List<Joke> SecretListOfJokes = new List<Joke>()
+        {
+            new Joke("Why did the boy get fired from his keyboard factory job? Because he was not doing enough shifts.",Language.English,Category.Tech,1),
+            new Joke("How many types of people are there in the world? There are 10 types of people in the world: those who understand binary and those who do not.",Language.English,Category.Tech,2),
+            new Joke("Why did the developer become so poor? Because he used up all his cache.",Language.English,Category.Tech,3),
+            new Joke("Why was the mobile phone wearing glasses? Because it lost its contacts.",Language.English,Category.Tech,4),
+            new Joke("What did the computer have during his break time? He had a byte!",Language.English,Category.Tech,5)
+        };
     }
 }
